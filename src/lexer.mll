@@ -2,7 +2,7 @@
 open Parser
 }
 
-let white = [' ' '\t']+
+let white = [' ' '\t' '\r' '\n']+
 let digit = ['0'-'9']
 let int = '-'? digit+
 let letter = ['a'-'z' 'A'-'Z']
@@ -23,6 +23,16 @@ rule read =
   | "If" { IF }
   | "Then" { THEN }
   | "Else" { ELSE }
+  | "And" { AND }
+  | "Or" { OR }
+  | "Not" { NOT }
+  | "First" { FIRST }
+  | "Second" { SECOND }
+  | "Fun" { FUN }
+  | "Fix" { FIX }
+  | "->" { ARROW }
+  | "." { DOT }
+  | "," { COMMA }
   | id { ID (Lexing.lexeme lexbuf) }
   | int { INT (int_of_string (Lexing.lexeme lexbuf)) }
   | eof { EOF }

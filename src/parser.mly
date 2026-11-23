@@ -17,12 +17,9 @@ open Lang
 %token THEN
 %token ELSE
 %token EOF
-
-%nonassoc IN
-%nonassoc ELSE
-%left EQUALS
-%left PLUS
-%left TIMES
+%token FIRST SECOND
+%token FUN FIX ARROW DOT COMMA
+%token AND OR NOT
 
 %start <Lang.expr> prog
 
@@ -33,14 +30,60 @@ prog:
   ;
 
 expr:
-  | i    = INT { Int i }
-  | x    = ID  { Var x }
-  | TRUE       { Bool true }
-  | FALSE      { Bool false }
-  | e1 = expr; EQUALS; e2 = expr { Equal (e1, e2) }
-  | e1 = expr; TIMES;  e2 = expr { Mult(e1, e2) }
-  | e1 = expr; PLUS;   e2 = expr { Plus(e1, e2) }
-  | LET; x = ID; EQUALS; e1 = expr; IN; e2 = expr   { Let (x, e1, e2) }
-  | IF; e1 = expr; THEN; e2 = expr; ELSE; e3 = expr { If (e1, e2, e3) }
-  | LPAREN; e=expr; RPAREN {e}
+  | LET; x = ID; EQUALS; e1 = expr; IN; e2 = expr
+      { Let(x,e1,e2) }
+  | IF; e1 = expr; THEN; e2 = expr; ELSE; e3 = expr
+      { If(e1,e2,e3) }
+  | FUN; x = ID; ARROW; e = expr
+      { Fun(x,e) }
+  | FIX; f = ID; DOT; x = ID; ARROW; e = expr
+      { Fix(f,x,e) }
+  | e = or_expr { e }
+  ;
+
+or_expr:
+  | e1 = or_expr; OR; e2 = and_expr { Or(e1,e2) }
+  | e = and_expr { e }
+  ;
+
+and_expr:
+  | e1 = and_expr; AND; e2 = eq_expr { And(e1,e2) }
+  | e = eq_expr { e }
+  ;
+
+eq_expr:
+  | e1 = eq_expr; EQUALS; e2 = add_expr { Equal(e1,e2) }
+  | e = add_expr { e }
+  ;
+
+add_expr:
+  | e1 = add_expr; PLUS; e2 = mult_expr { Plus(e1,e2) }
+  | e = mult_expr { e }
+  ;
+
+mult_expr:
+  | e1 = mult_expr; TIMES; e2 = app_expr { Mult(e1,e2) }
+  | e = app_expr { e }
+  ;
+
+app_expr:
+  | e1 = app_expr; e2 = prefix_expr { App(e1,e2) }
+  | e = prefix_expr { e }
+  ;
+
+prefix_expr:
+  | NOT; e = prefix_expr { Not e }
+  | FIRST; e = prefix_expr { First e }
+  | SECOND; e = prefix_expr { Second e }
+  | e = atom { e }
+  ;
+
+atom:
+  | i = INT { Int i }
+  | x = ID { Var x }
+  | TRUE { Bool true }
+  | FALSE { Bool false }
+  | LPAREN; e = expr; RPAREN { e }
+  | LPAREN; e1 = expr; COMMA; e2 = expr; RPAREN
+      { Pair(e1,e2) }
   ;
