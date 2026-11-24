@@ -1,6 +1,5 @@
 # Assignment 8, CS3250
 
-TODO: Update this README and fill out the reflection questions.
 
 This repository contains a (template) implementation of CatML, an ML variant used at UVM for CS3250.
 
@@ -75,27 +74,46 @@ In the `examples` directory I have included two sample CatML programs. You shoul
 
 ## How to interact with a CatML program
 
-TODO
+First, build the project using dune build, then start utop using dune utop.
+
+Once utop is open you can run a CatML program by entering:
+
+
+CatML.Main.run_file "examples/example.catml";;
+
+
+This example should output 105.
+
+You can also run the factorial example using:
+
+
+CatML.Main.run_file "examples/factorial.catml";;
+
+
+This should output 120.
+
+The program reads the file, parses it, checks the type and evaluates it. If there is a syntax or type error it prints an error message.
+
 
 
 # Reflection Questions
 
 1. If you worked as a group, list all the group members.
 
-TODO
+Only me.
 
-2. Did you use generative AI to assist you in implementing this project? If so, briefly explain how you used it and for which components.
+2. Did you use generative AI to assist you in implementing this project? If so, briefly explain how you used it and for which component.
 
-TODO
+I used ai to help get Dune set up and troubleshoot a few issues with the development tools.
 
 3. Did you make any design decisions that we should know about?
 
-TODO
+I decided to keep the small step evaluation and substitution approach from the starter code.
 
 4. Did you implement any of the extra credit features? Briefly summarize your work.
 
-TODO
+I did not.
 
 5. Any feedback on the structure of this assignment?
 
-TODO
+I thought the assignment was a little challenging especially getting all the different parts working together, but it was definitely good practice for understanding how the different parts of a programming language work.

@@ -12,8 +12,6 @@ type expr =
      | If of expr * expr * expr
      (* Variables and let expressions *)
      | Var of var | Let of var * expr * expr
-
-     (* TODO: Add pairs; functions; and recursive functions *)
      | Pair of expr * expr
      | First of expr
      | Second of expr
@@ -31,7 +29,7 @@ let rec is_val e = match e with
      Int _ -> true
    | Bool _ -> true
    | Pair(e1,e2) -> is_val e1 && is_val e2
-   | Fun _ -> true
+   | Fun _ | Fix _ -> true
    | _ -> false
 
 (*************************)
@@ -201,7 +199,7 @@ type arith_type =
   | BOOL
   | PAIR of arith_type * arith_type
   | ARROW of arith_type * arith_type
-(* TODO: add pairs and function types *)
+
 
 (* Define a type to represent finite maps/typing contexts *)
 type context = (var * arith_type) list
@@ -321,7 +319,6 @@ let rec type_of_expr (g, e) : arith_type option =
   out : The concrete expression e in string format.
 *)
 let rec string_of_expr e = match e with
-  (* TODO: extend string_of_expr *)
    | Var x -> x
    | Let(x,e1,e2) -> "Let " ^ x ^ " = " ^ string_of_expr e1 ^ " In " ^ string_of_expr e2
    | Bool true -> "True"
